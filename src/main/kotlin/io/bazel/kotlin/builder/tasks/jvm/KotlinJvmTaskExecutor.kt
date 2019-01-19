@@ -108,6 +108,11 @@ class KotlinJvmTaskExecutor @Inject internal constructor(
             .addAll("-module-name", info.moduleName)
             .addAll("-d", directories.classes)
 
+        args.addAll(listOf(
+            "-Xplugin=${compiler.toolchain.allOpenPluginJar.path}",
+            "-P", "plugin:org.jetbrains.kotlin.allopen:annotation=ai.selma.base.Mockable"
+        ))
+
         info.passthroughFlags?.takeIf { it.isNotBlank() }?.also { args.addAll(it.split(" ")) }
         return args
     }

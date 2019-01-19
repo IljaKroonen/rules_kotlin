@@ -39,7 +39,8 @@ class KotlinToolchain private constructor(
     val kapt3Plugin: KotlinToolchain.CompilerPlugin = KotlinToolchain.CompilerPlugin(
         kotlinHome.resolveVerified("lib", "kotlin-annotation-processing.jar").absolutePath,
         "org.jetbrains.kotlin.kapt3"
-    )
+    ),
+    val allOpenPluginJar: File = kotlinHome.resolveVerified("lib", "allopen-compiler-plugin.jar")
 ) {
 
     companion object {
@@ -100,7 +101,7 @@ class KotlinToolchain private constructor(
     }
 
     open class KotlinCliToolInvoker internal constructor(
-        toolchain: KotlinToolchain,
+        val toolchain: KotlinToolchain,
         clazz: String
     ) {
         private val compiler: Any
