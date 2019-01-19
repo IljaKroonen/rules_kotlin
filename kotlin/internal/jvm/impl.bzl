@@ -129,7 +129,7 @@ def kt_jvm_import_impl(ctx):
                 output_jar = jars[0],
                 compile_jar = jars[0],
                 source_jar = source_jar,
-                runtime_deps = ctx.attr.runtime_deps,
+                runtime_deps = [rd[JavaInfo] for rd in ctx.attr.runtime_deps],
                 neverlink = getattr(ctx.attr, "neverlink", False),
             ),
             kt_info,
