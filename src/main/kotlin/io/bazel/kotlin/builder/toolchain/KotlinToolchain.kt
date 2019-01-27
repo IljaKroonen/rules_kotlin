@@ -39,7 +39,8 @@ class KotlinToolchain private constructor(
     val kapt3Plugin: KotlinToolchain.CompilerPlugin = KotlinToolchain.CompilerPlugin(
         kotlinHome.resolveVerified("lib", "kotlin-annotation-processing.jar").absolutePath,
         "org.jetbrains.kotlin.kapt3"
-    )
+    ),
+    val abiJarPluginJar: String = kotlinHome.resolveVerified("lib", "jvm-abi-gen.jar").absolutePath
 ) {
 
     companion object {
@@ -128,7 +129,7 @@ class KotlinToolchain private constructor(
 
     @Singleton
     class KotlincInvoker @Inject constructor(
-        toolchain: KotlinToolchain
+        val toolchain: KotlinToolchain
     ) : KotlinCliToolInvoker(toolchain, "io.bazel.kotlin.compiler.BazelK2JVMCompiler")
 
     @Singleton

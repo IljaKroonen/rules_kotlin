@@ -219,6 +219,7 @@ _runnable_common_attr = utils.add_dicts(_common_attr, {
 
 _common_outputs = dict(
     jar = "%{name}.jar",
+    abi_jar = "%{name}_abi.jar",
     jdeps = "%{name}.jdeps",
     # The params file, declared here so that validate it can be validated for testing.
     #    jar_2_params = "%{name}.jar-2.params",
