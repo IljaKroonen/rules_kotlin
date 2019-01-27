@@ -55,7 +55,6 @@ filegroup(
         visibility = ["//visibility:public"],
     )
     for art in [
-        "runtime",
         "stdlib",
         "stdlib-jdk7",
         "stdlib-jdk8",
@@ -64,6 +63,13 @@ filegroup(
         "script-runtime",
     ]
 ]
+
+kt_jvm_import(
+    name = "kotlin-runtime",
+    jars = ["lib/kotlin-stdlib.jar"],
+    srcjar = "lib/kotlin-stdlib-sources.jar",
+    visibility = ["//visibility:public"],
+)
 
 #  The Kotlin JS standard libraries. These should be setup in a Toolchain.
 [
