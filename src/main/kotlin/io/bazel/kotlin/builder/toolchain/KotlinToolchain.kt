@@ -40,7 +40,8 @@ class KotlinToolchain private constructor(
         kotlinHome.resolveVerified("lib", "kotlin-annotation-processing.jar").absolutePath,
         "org.jetbrains.kotlin.kapt3"
     ),
-    val allOpenPluginJar: File = kotlinHome.resolveVerified("lib", "allopen-compiler-plugin.jar")
+    val allOpenPluginJar: File = kotlinHome.resolveVerified("lib", "allopen-compiler-plugin.jar"),
+    val abiJarPluginJar: String = kotlinHome.resolveVerified("lib", "jvm-abi-gen.jar").absolutePath
 ) {
 
     companion object {

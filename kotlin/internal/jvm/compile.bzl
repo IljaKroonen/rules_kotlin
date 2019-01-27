@@ -137,7 +137,7 @@ def _partition_srcs(srcs):
         src_jars = depset(src_jars),
     )
 
-def kt_jvm_compile_action(ctx, rule_kind, output_jar):
+def kt_jvm_compile_action(ctx, rule_kind, output_jar, output_abi_jar):
     """This macro sets up a compile action for a Kotlin jar.
 
     Args:
@@ -185,6 +185,7 @@ def kt_jvm_compile_action(ctx, rule_kind, output_jar):
     args.add("--kotlin_generated_classdir", generated_classes_directory.path)
 
     args.add("--output", output_jar)
+    args.add("--output_abi", output_abi_jar)
     args.add("--kotlin_output_jdeps", ctx.outputs.jdeps)
     args.add("--kotlin_output_srcjar", ctx.outputs.srcjar)
 
@@ -219,6 +220,7 @@ def kt_jvm_compile_action(ctx, rule_kind, output_jar):
         tools = tools,
         outputs = [
             output_jar,
+            output_abi_jar,
             ctx.outputs.jdeps,
             ctx.outputs.srcjar,
             sourcegen_directory,
@@ -236,7 +238,7 @@ def kt_jvm_compile_action(ctx, rule_kind, output_jar):
     return struct(
         java = JavaInfo(
             output_jar = ctx.outputs.jar,
-            compile_jar = ctx.outputs.jar,
+            compile_jar = ctx.outputs.abi_jar,
             source_jar = ctx.outputs.srcjar,
             #  jdeps = ctx.outputs.jdeps,
             deps = deps,
@@ -297,4 +299,5 @@ def kt_jvm_produce_jar_actions(ctx, rule_kind):
         ctx,
         rule_kind = rule_kind,
         output_jar = kt_compile_output_jar,
+        output_abi_jar = ctx.outputs.abi_jar,
     )

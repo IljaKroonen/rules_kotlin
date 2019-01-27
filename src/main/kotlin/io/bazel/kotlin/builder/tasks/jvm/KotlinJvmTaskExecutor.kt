@@ -39,6 +39,7 @@ class KotlinJvmTaskExecutor @Inject internal constructor(
         val preprocessedTask = task.preProcessingSteps(context)
         context.execute("compile classes") { preprocessedTask.compileAll(context) }
         context.execute("create jar") { preprocessedTask.createOutputJar() }
+        context.execute("create ABI jar") { preprocessedTask.createOutputAbiJar() }
         context.execute("produce src jar") { preprocessedTask.produceSourceJar() }
         context.execute("generate jdeps") { jDepsGenerator.generateJDeps(preprocessedTask) }
     }
@@ -148,6 +149,21 @@ class KotlinJvmTaskExecutor @Inject internal constructor(
             it.execute()
         }
 
+    /**
+     * Produce the ABI output jar.
+     */
+    private fun JvmCompilationTask.createOutputAbiJar() =
+            JarCreator(
+                    path = Paths.get(outputs.abiJar),
+                    normalize = true,
+                    verbose = false
+            ).also {
+                it.addDirectory(Paths.get(directories.temp).resolve("_abiclasses"))
+                it.addDirectory(Paths.get(directories.generatedClasses))
+                it.setJarOwner(info.label, info.bazelRuleKind)
+                it.execute()
+            }
+
     private fun JvmCompilationTask.compileAll(context: CompilationTaskContext) {
         ensureDirectories(
             directories.classes
@@ -177,6 +193,12 @@ class KotlinJvmTaskExecutor @Inject internal constructor(
         getCommonArgs().let { args ->
             args.addAll(inputs.javaSourcesList)
             args.addAll(inputs.kotlinSourcesList)
+
+            args.addAll(listOf(
+                    "-Xplugin=${compiler.toolchain.abiJarPluginJar}",
+                    "-P", "plugin:org.jetbrains.kotlin.jvm.abi:outputDir=${Paths.get(directories.temp).resolve("_abiclasses")}"
+            ))
+
             context.executeCompilerTask(args, compiler::compile, printOnFail = printOnFail)
         }
 

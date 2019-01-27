@@ -105,6 +105,7 @@ class KotlinBuilder @Inject internal constructor(
         EXT_CLASSPATH("--extclasspath"),
         EXT_DIR("--extdir"),
         OUTPUT("--output"),
+        OUTPUT_ABI("--output_abi"),
         NATIVE_HEADER_OUTPUT("--native_header_output"),
         CLASSDIR("--classdir"),
         TEMPDIR("--tempdir"),
@@ -192,6 +193,7 @@ class KotlinBuilder @Inject internal constructor(
 
             with(root.outputsBuilder) {
                 jar = argMap.mandatorySingle(JavaBuilderFlags.OUTPUT)
+                abiJar = argMap.mandatorySingle(JavaBuilderFlags.OUTPUT_ABI)
                 jdeps = argMap.mandatorySingle(KotlinBuilderFlags.OUTPUT_JDEPS)
                 srcjar = argMap.mandatorySingle(KotlinBuilderFlags.OUTPUT_SRCJAR)
             }
